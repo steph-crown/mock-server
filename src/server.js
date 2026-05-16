@@ -11,10 +11,30 @@
  */
 
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { getCookie, setCookie, deleteCookie } from "hono/cookie";
 import { SignJWT, jwtVerify } from "jose";
 
 const app = new Hono();
+
+app.use(
+  "*",
+  cors({
+    origin: (origin) => {
+      if (!origin) return null;
+      if (
+        /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
+        origin.endsWith(".vercel.app")
+      )
+        return origin;
+      return null;
+    },
+    credentials: true,
+    allowHeaders: ["Content-Type"],
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    maxAge: 600,
+  }),
+);
 
 // ─── Secrets (hardcoded for demo only) ───────────────────────────────────────
 
@@ -140,7 +160,7 @@ function setAccessCookie(c, token) {
   setCookie(c, "access_token", token, {
     httpOnly: true,
     secure: isSecure(c),
-    sameSite: "Strict",
+    sameSite: "None",
     path: "/",
     maxAge: 15 * 60,
   });
@@ -154,7 +174,7 @@ function setRefreshCookie(c, token) {
   setCookie(c, "refresh_token", token, {
     httpOnly: true,
     secure: isSecure(c),
-    sameSite: "Strict",
+    sameSite: "None",
     path: "/api/auth/refresh",
     maxAge: 7 * 24 * 60 * 60,
   });
