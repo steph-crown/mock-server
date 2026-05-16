@@ -222,7 +222,7 @@ app.post("/api/auth/login", async (c) => {
   const { email, password } = await c.req.json().catch(() => ({}));
 
   const user = USERS.find((u) => u.email === email && u.password === password);
-  if (!user) return c.json({ error: "Invalid email or password" }, 401);
+  if (!user) return c.json({ error: "Invalid email or password" }, 400);
 
   const { accessToken, refreshToken } = await issueTokens(user);
   setAccessCookie(c, accessToken);
