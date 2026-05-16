@@ -1,0 +1,18 @@
+{
+  "name": "cms-mock-server",
+  "version": "0.0.0",
+  "description": "Temporary in-memory auth/API server for CMS MFE POC demo. Not for production.",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/dev.js",
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.0",
+    "hono": "^4.7.0",
+    "jose": "^5.9.0"
+  }
+}
